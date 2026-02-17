@@ -1,10 +1,22 @@
-const {Pool} = require('pg'); //node-postgres; creacion de la instancia de pg con requiere que da un pool de conexiones hacia la base de datos en postgresql
-require('dotenv').config({path:'../../.env'}); //cargar variables de entorno dentro de config se le pasa el path  donde se encuentra la variable de entorno
+const {Pool} = require('pg'); // node-postgres pool
+const path = require('path');
+
+// Cargar variables de entorno desde el .env relativo a este archivo (ruta absoluta)
+require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
+
+// Debug: mostrar configuración de DB (no imprimir la contraseña en texto claro)
+console.log('DB config loaded:', {
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT,
+    password_set: !!process.env.DB_PASSWORD,
+});
 
 const pool = new Pool({ // Crear una nueva instancia de Pool para manejar conexiones a la base de datos
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
-    database: process.env.DB_DATABASE,
+    database: process.env.DB_NAME,
     password: process.env.DB_PASSWORD,
     port: process.env.DB_PORT,
 });

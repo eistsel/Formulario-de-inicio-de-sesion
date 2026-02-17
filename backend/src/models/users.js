@@ -9,7 +9,7 @@ const User = {
             const {rows} = await db.query(query, [email]); // ejecutar la consulta con el email como parametro
             return rows[0]; // Return the first user found
         }
-        catch{
+        catch(error){
             console.error('Error finding user by email:', error);
             throw new Error('Database error');
         }
@@ -22,7 +22,7 @@ const User = {
             const {rows} = await db.query(query, [id]);
             return rows[0]; // Return the first user found
         }
-        catch{
+        catch(error){
             console.error('Error finding user by ID:', error);
             throw new Error('Database error');
         }
@@ -38,16 +38,18 @@ const User = {
         const values = [name, email, hashedPassword]; // Use parameterized queries to prevent SQL injection
 
         try{
+            // Debug: información no sensible sobre el usuario a crear
+            console.log('Creating user:', { name, email, hashedPasswordSet: !!hashedPassword });
             const {rows} = await db.query(query, values);
             return rows[0]; // Return the created user
         }
         catch(error){
-            console.error('Error creating user:', error);
-            if(error.code === '23505') { // el codigo lo brinda postgres para indicar que hay un conflicto de clave unica
+            console.error('Error creating user:', error.stack || error);
+            if(error && error.code === '23505') { // el codigo lo brinda postgres para indicar que hay un conflicto de clave unica
                 // 23505 es el codigo de error para violacion de clave unica
-                throw new Error('Email already exists'); // Handle unique constraint violation
+                throw new Error('El correo electronico ya esta registrado'); // Handle unique constraint violation (spanish message expected by controller)
             }
-            throw new Error('Database error'); // Handle other errors
+            throw error; // Propagar el error original para ver el detalle en los logs
         }
     },
 
