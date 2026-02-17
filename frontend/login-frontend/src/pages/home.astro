@@ -1,0 +1,46 @@
+---
+import Layout from "../layouts/Layout.astro";
+let userName = null; // Inicializamos la variable userName como null para evitar errores de referencia
+---
+
+<Layout title="Home-Bienvenido">
+    <main class="text-center">
+        <h1 class="text-3xl font-bold mb-4">Bienvenido</h1>
+        <p id="welcome-message" class="text-xl"></p>
+        <button id="logout-button" class="mt-6 bg-red-400 hover:bg-red-500 text-white font-bold">Cerrar sesion</button>
+    </main>
+</Layout>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const token = localStorage.getItem('jwtToken'); // Obtenemos el token del localStorage con getItem
+        const welcomeElement = document.getElementById('welcome-message'); // Obtenemos el elemento del DOM con el id welcome-message
+        const logoutButton = document.getElementById('logout-button'); // Obtenemos el elemento del DOM con el id logout-button
+
+        if (!token) {
+            window.location.href = '/'; // Si no hay token, redirigimos al usuario a la pagina de login
+        } else {
+            const userName = localStorage.getItem('userName'); // Obtenemos el nombre de usuario del localStorage
+            if (welcomeElement) { // Verificamos que welcomeElement no sea null
+                if (userName) {
+                    welcomeElement.textContent = `Bienvenido ${userName}`; // Si existe el nombre de usuario, lo mostramos
+                } else {
+                    welcomeElement.textContent = `Bienvenido`; // Si no existe el nombre de usuario, mostramos un mensaje genérico
+                }
+            } else {
+                console.error('El elemento con id "welcome-message" no se encontró en el DOM.');
+            }
+        }
+
+        if (logoutButton) { // Verificamos que logoutButton no sea null
+            logoutButton.addEventListener('click', () => {
+                localStorage.removeItem('jwtToken'); // Eliminamos el token del localStorage
+                localStorage.removeItem('userName'); // Eliminamos el userName del localStorage
+                localStorage.removeItem('userEmail'); // Eliminamos el email del localStorage
+                window.location.href = '/'; // Redirigimos al usuario a la pagina de login
+            });
+        } else {
+            console.error('El elemento con id "logout-button" no se encontró en el DOM.');
+        }
+    });
+</script>

@@ -1,0 +1,21 @@
+---
+import './src/styles/global.css';
+interface Props { // especificamos el tipo de dato que recibimos es typescript
+	title: string;
+}
+const {title} = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Sistema de Login con Astro y PostgreSQL" /> <!-- esta descripcion es la que aparecera en los motores de busqueda -->
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} /> <!-- esta etiqueta es para que los motores de busqueda sepan que generador se utilizo -->
+		<title>{title}</title>
+	</head>
+	<body class="min-h-screen flex items-center justify-center bg-gray-50">
+		<slot />
+	</body>
+</html>
